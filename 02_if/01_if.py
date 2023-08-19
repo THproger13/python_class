@@ -8,3 +8,5 @@ elif num == 0:
     print("0 입니다.")
 else:
     print("숫자가 아닙니다.")
+    
+    
