@@ -28,4 +28,7 @@ result = wc.generate_from_frequencies(word_list_count)
 #matplotlib으로 이미지 출력
 plt.axis('off') #x,y축은 필요 없으므로 생략
 plt.imshow(result)
+#출력된 이미지를 꺼야 파일 저장됨
 plt.show()
+#워드 클라우드 파일 저장
+wc.to_file('wordcloud_result.png')
