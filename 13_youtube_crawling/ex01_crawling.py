@@ -41,6 +41,8 @@ for title in titles:
     # shorts 영상, YouTube 영화, 제목데이터 없는 컨텐츠 
     if title.get_attribute("aria-label") and title.text and "YouTube 영화" not in title.get_attribute("aria-label"): 
         aria_label = title.get_attribute("aria-label")
+        # rfind()메서드는 문자열 내에서 특정 부분 문자열을 찾아 해당 부분 문자열이 나타나느 가장 마지막 위치를 반환한다.
+        # 'r'은 reverse의 약자이며, 역순으로 문자열을 탐색한다. 
         start_index = aria_label.rfind("조회수")+4
         end_index = aria_label.rfind("회")
         hits = aria_label[start_index:end_index]
@@ -85,9 +87,13 @@ title_adjective_list = []
 
 okt = Okt()
 
-
-#명사(Noun), 형용사(Adjective)만 따로 출력
-
+'''
+명사(Noun), 형용사(Adjective)만 따로 출력
+ 이때 title_list는 리스트 자료형이어서 okt.pos()가 분석을 못한다. 
+ 따라서 title_list 안의 문자열 요소들을 공백으로 구분해 하나의 문자열로 합친뒤
+ okt.pos()가 띄어쓰기를 기준으로 단어들을 분석하도록 한다. 
+'''
+ 
 for word, tag in okt.pos(" ".join(title_list)):
     if tag in ['Noun', 'ProperNoun', 'Adjective']:
         if len(word) > 1:  # 한 글자는 제외
@@ -103,17 +109,25 @@ title_adjective_list_count = Counter(title_adjective_list)
 
 # 워드클라우드 객체 생성
 wc = WordCloud(font_path='malgun', width =400, height=400)
-
-#Counter로 분석한 데이터를 워드 클라우드로 만들기
+'''
+Counter로 분석한 데이터를 워드 클라우드로 만들기
+    - **를 사용하여 "키워드 매개변수 언패킹"을 한다. 
+    - title_noun_list_count에 title_adjective_list_count의 내용을 풀어서(언패킹) 추가를 해준다. 
+    - 이렇게 함으로써 명사 빈도수와 형용사 빈도수가 합쳐진 하나의 딕셔너리가 생성된다.
+'''
+ 
 result = wc.generate_from_frequencies(dict(title_noun_list_count, **title_adjective_list_count))
 
 #matplotlib으로 이미지 출력
-plt.axis('off') #x,y축은 필요 없으므로 생략
+#x,y축은 필요 없으므로 생략
+plt.axis('off') 
 plt.imshow(result)
 #출력된 이미지를 꺼야 파일 저장됨
 plt.show()
 #워드 클라우드 파일 저장
 wc.to_file('wordcloud_result.png')
+
+
 
 
 
